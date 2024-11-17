@@ -1,0 +1,113 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Profile Container */
+.profile-container {
+    width: 80%;
+    max-width: 900px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Section */
+.profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.name {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.job-title {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+}
+
+/* Bio Section */
+.bio-section {
+    margin-bottom: 30px;
+}
+
+.bio-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: #2980b9;
+}
+
+.bio-section p {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.8;
+}
+
+/* Contact Info Section */
+.contact-info {
+    margin-bottom: 30px;
+}
+
+.contact-info h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: #2980b9;
+}
+
+.contact-info ul {
+    list-style: none;
+}
+
+.contact-info ul li {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+/* Social Links Section */
+.social-links h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: #2980b9;
+}
+
+.social-links ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.social-links ul li {
+    margin-bottom: 10px;
+}
+
+.social-links a {
+    text-decoration: none;
+    font-size: 1.1rem;
+    color: #2980b9;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #3498db;
+}
