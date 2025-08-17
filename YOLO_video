@@ -1,0 +1,76 @@
+import cv2
+import numpy as np
+import urllib.request
+from ultralytics import YOLO
+
+# -----------------------------
+# STEP 1: ভিডিও লিঙ্ক থেকে ডাউনলোড করা
+# -----------------------------
+video_url = "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4"  # এখানে আপনার ভিডিও লিঙ্ক দিন
+video_path = "input_video.mp4"
+urllib.request.urlretrieve(video_url, video_path)
+
+# -----------------------------
+# STEP 2: YOLO মডেল লোড করা
+# -----------------------------
+model = YOLO("yolov8n.pt")  # YOLOv8 Nano model (Fast)
+
+# -----------------------------
+# STEP 3: ভিডিও ওপেন করা
+# -----------------------------
+cap = cv2.VideoCapture(video_path)
+
+# -----------------------------
+# STEP 4: Distance ক্যালকুলেশনের জন্য সেটিংস
+# -----------------------------
+PIXEL_TO_METER = 0.05   # 1 pixel = 0.05 meter (আপনার ভিডিও অনুযায়ী পরিবর্তন করুন)
+object_tracks = {}      # প্রতিটি object এর position ও distance track করার জন্য
+
+# -----------------------------
+# STEP 5: ভিডিও প্রসেস করা
+# -----------------------------
+while cap.isOpened():
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    # STEP 5.1: YOLO দিয়ে detection চালানো
+    results = model.track(frame, persist=True, tracker="bytetrack.yaml")  
+
+    if results[0].boxes.id is not None:
+        boxes = results[0].boxes.xyxy.cpu().numpy()   # bounding boxes
+        ids = results[0].boxes.id.cpu().numpy()       # object IDs
+
+        # STEP 5.2: প্রতিটি object এর অবস্থান ট্র্যাক করা
+        for box, obj_id in zip(boxes, ids):
+            x1, y1, x2, y2 = box
+            cx, cy = int((x1+x2)/2), int((y1+y2)/2)   # object এর center point
+
+            if obj_id not in object_tracks:
+                object_tracks[obj_id] = {"positions": [(cx, cy)], "distance": 0}
+            else:
+                prev_cx, prev_cy = object_tracks[obj_id]["positions"][-1]
+                dist_px = np.sqrt((cx-prev_cx)**2 + (cy-prev_cy)**2)  # পিক্সেলে দূরত্ব
+                dist_m = dist_px * PIXEL_TO_METER                     # মিটারে রূপান্তর
+
+                object_tracks[obj_id]["distance"] += dist_m
+                object_tracks[obj_id]["positions"].append((cx, cy))
+
+            # STEP 5.3: চলাফেরার পথ আঁকা
+            for i in range(1, len(object_tracks[obj_id]["positions"])):
+                cv2.line(frame, object_tracks[obj_id]["positions"][i-1],
+                         object_tracks[obj_id]["positions"][i], (0, 255, 0), 2)
+
+            # STEP 5.4: Object এর উপর টেক্সট লিখা (ID + Distance)
+            total_dist = object_tracks[obj_id]["distance"]
+            cv2.putText(frame, f"ID {int(obj_id)}: {total_dist:.2f} m", 
+                        (cx, cy-10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,0,0), 2)
+
+    # STEP 5.5: ফ্রেম দেখানো
+    cv2.imshow("YOLOv8 Movement Tracking", frame)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):  
+        break
+
+cap.release()
+cv2.destroyAllWindows()
