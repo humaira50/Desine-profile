@@ -3,32 +3,31 @@ import numpy as np
 import urllib.request
 from ultralytics import YOLO
 
-# -----------------------------
+
 # STEP 1: ভিডিও লিঙ্ক থেকে ডাউনলোড করা
-# -----------------------------
+
 video_url = "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4"  # এখানে আপনার ভিডিও লিঙ্ক দিন
 video_path = "input_video.mp4"
 urllib.request.urlretrieve(video_url, video_path)
 
-# -----------------------------
-# STEP 2: YOLO মডেল লোড করা
-# -----------------------------
-model = YOLO("yolov8n.pt")  # YOLOv8 Nano model (Fast)
 
-# -----------------------------
+# STEP 2: YOLO মডেল লোড করা
+
+model = YOLO("yolov8n.pt") 
+
+
 # STEP 3: ভিডিও ওপেন করা
-# -----------------------------
+
 cap = cv2.VideoCapture(video_path)
 
-# -----------------------------
 # STEP 4: Distance ক্যালকুলেশনের জন্য সেটিংস
-# -----------------------------
+
 PIXEL_TO_METER = 0.05   # 1 pixel = 0.05 meter (আপনার ভিডিও অনুযায়ী পরিবর্তন করুন)
 object_tracks = {}      # প্রতিটি object এর position ও distance track করার জন্য
 
-# -----------------------------
+
 # STEP 5: ভিডিও প্রসেস করা
-# -----------------------------
+
 while cap.isOpened():
     ret, frame = cap.read()
     if not ret:
