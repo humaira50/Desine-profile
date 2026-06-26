@@ -5,9 +5,9 @@ import numpy as np
 import cvzone
 from ultralytics import YOLO
 
-# ---------------------- Config ----------------------
+
 VIDEO_SOURCE =  "video/human.mp4"
-MODEL_PATH = "../Yolo-Weights/yolov8n.pt"  # n/s/m/l আপনার পছন্দ
+MODEL_PATH = "../Yolo-Weights/yolov8n.pt"  
 CONF_THRES = 0.4
 IOU_THRES = 0.45
 TARGET_CLASSES = None  # None => সব ক্লাস; উদাহরণ: {'person','car'}
@@ -21,14 +21,14 @@ CLASS_NAMES = ["person","bicycle","car","motorbike","aeroplane","bus","train","t
                "traffic light","fire hydrant","stop sign","parking meter","bench","bird","cat"]
 
 
-# ------------------- Simple Centroid Tracker -------------------
+# Simple Centroid Tracker
 class CentroidTracker:
     def __init__(self, max_match_dist=80, max_disappeared=30, trail_len=30):
         self.next_id = 1
-        self.objects = {}         # id -> (cx, cy)
-        self.totals = {}          # id -> cumulative distance (pixels)
-        self.disappeared = {}     # id -> frames disappeared
-        self.trails = {}          # id -> list of (cx,cy)
+        self.objects = {}         
+        self.totals = {}          
+        self.disappeared = {}   
+        self.trails = {}          
         self.max_match_dist = max_match_dist
         self.max_disappeared = max_disappeared
         self.trail_len = trail_len
@@ -140,7 +140,7 @@ class CentroidTracker:
                 d.pop(oid, None)
 
 
-# ---------------------- Main ----------------------
+# Main 
 def main():
     cap = cv2.VideoCapture(VIDEO_SOURCE)
     if isinstance(VIDEO_SOURCE, int):
