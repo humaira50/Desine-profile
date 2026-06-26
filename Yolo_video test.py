@@ -3,7 +3,7 @@ import math
 import cvzone
 from ultralytics import YOLO
 
-# cap = cv2.VideoCapture(0)   # For Webcam
+# cap = cv2.VideoCapture(0)  
 # cap.set(3, 1280)
 # cap.set(4, 720)
 cap = cv2.VideoCapture("video/car.mp4")   # For Video
